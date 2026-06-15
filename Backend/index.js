@@ -34,14 +34,20 @@ app.post("/analyze-resume", upload.array("files"), async (req, res) => {
   try {
     for (const file of files) {
       const uint8 = new Uint8Array(file.buffer);
-      const parse = await new PDFParse(uint8);
+      const parse = new PDFParse(uint8);
 
       const result = await parse.getText();
-      allDocs.push(result.text.slice(0, 50));
+      allDocs.push({
+        name:file.originalname,
+        text:result.text.slice(0, 50)
+      });
     }
 
     res.json({
-      reply: allDocs,
+      reply: allDocs.map((doc)=>
+        `${doc.name}\n
+        ${doc.text}`
+      ).join("\n\n")
     });
   } catch (err) {
     res.json({
