@@ -1,0 +1,16 @@
+{
+  "name": "resume-analyzer",
+  "version": "1.0.0",
+  "description": "Your AI-powered resume companion that analyzes your resume in seconds and pinpoints exactly what's holding it back. Get detailed feedback, identify missing skills, uncover ATS issues, and receive actionable suggestions to improve your chances of getting shortlisted—all in under a minute.",
+  "keywords": [
+    "resume",
+    "analyzer"
+  ],
+  "license": "ISC",
+  "author": "Tamanna Haque Oyeshi",
+  "type": "commonjs",
+  "main": "main.jsx",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
