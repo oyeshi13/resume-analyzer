@@ -2,6 +2,8 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import multer from 'multer'
+import {PDFParse} from 'pdf-parse'
+import fs from 'fs'
 
 
 const app=express()
@@ -28,12 +30,25 @@ app.post('/chat',(req,res)=>{
     })
 })
 
-app.post("/analyze-resume",upload.array("files"),(req,res)=>{
+app.post("/analyze-resume",upload.array("files"),async (req,res)=>{
     const files = req.files
     const prompt = req.body.prompt
-    res.json({
-        reply: `received ${files.length} files with prompt:${prompt}`
+    
+    try{
+        const uint8 = new Uint8Array(files[0].buffer)
+        const parse = await new PDFParse(uint8)
+
+        const result = await parse.getText()
+        res.json({
+        reply: result.text.slice(0,150)
     })
+    }catch(err){
+        res.json({
+            reply: err.message
+        })
+    }
+    
+
 })
 
 app.listen(PORT,()=>{
