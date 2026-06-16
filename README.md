@@ -1,16 +1,124 @@
-# React + Vite
+![alt text](image-2.png)
+![alt text](image-4.png)
+![alt text](image-5.png)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# 🚀 ResumeAI Analyzer
 
-Currently, two official plugins are available:
+An AI-powered resume analysis platform that helps users evaluate resumes, identify skill gaps, improve ATS scores, and receive personalized career guidance.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 📄 Resume Upload
 
-## Expanding the ESLint configuration
+* Upload one or multiple PDF resumes
+* Extracts text automatically
+* Stores documents in MongoDB
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 🤖 AI Resume Analysis
+
+* ATS Score Generation
+* Strengths & Weaknesses Analysis
+* Missing Skills Detection
+* Recruiter Feedback
+* Interview Readiness Assessment
+
+### 💬 Context-Aware AI Chat
+
+Ask follow-up questions like:
+
+* What should I improve?
+* What skills should I learn next?
+* Which projects should I build?
+* Why is my ATS score low?
+
+The AI uses uploaded resumes as context for personalized answers.
+
+### 📊 Structured Responses
+
+* Markdown-based formatting
+* ATS Scores
+* Skill Gap Analysis
+* Career Roadmaps
+* Actionable Recommendations
+
+### 🔄 Live Analysis Status
+
+Displays real-time processing steps:
+
+* 📄 Reading documents
+* 🔍 Extracting skills
+* 📊 Calculating ATS score
+* 🎯 Matching requirements
+* 🤖 Generating recommendations
+
+### 🗑️ Smart Document Management
+
+* Delete uploaded files
+* Automatically removes associated MongoDB records
+* Keeps frontend and backend synchronized
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+* React
+* React Markdown
+* CSS
+
+### Backend
+
+* Node.js
+* Express.js
+* Multer
+
+### Database
+
+* MongoDB Atlas
+* Mongoose
+
+### AI
+
+* OpenRouter API
+* Large Language Models
+
+### Document Processing
+
+* PDF Parse
+
+---
+
+## 🏗️ How It Works
+
+```text
+Upload Resume
+      ↓
+PDF Parsing
+      ↓
+MongoDB Storage
+      ↓
+AI Context Retrieval
+      ↓
+Resume Analysis
+      ↓
+ATS Score & Recommendations
+```
+
+---
+
+## 🚀 Future Improvements
+
+* Resume vs Job Description Matching
+* Authentication & User Profiles
+* Cover Letter Generator
+* AI Mock Interviews
+* Vector Database & RAG Integration
+
+---
+
+## 👨‍💻 Author
+
+Built with React, Express, MongoDB, and AI to help job seekers improve their resumes and increase interview opportunities.
