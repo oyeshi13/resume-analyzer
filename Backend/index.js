@@ -5,7 +5,7 @@ import multer from "multer";
 import { PDFParse } from "pdf-parse";
 import { dbConnect } from "./config/db.js";
 import mongoose from "mongoose";
-import Resume from './models/resume.js'
+import Resume from "./models/resume.js";
 import systemPrompt from "./systemPrompt.js";
 
 const app = express();
@@ -19,9 +19,6 @@ const upload = multer({
 dotenv.config();
 app.use(express.json());
 app.use(cors());
-
-
-
 
 app.get("/", (req, res) => {
   res.send("backend running");
@@ -78,22 +75,25 @@ app.post("/ai-chat", async (req, res) => {
     // res.send(response.text)
 
     //OpenRouter integration
-    const {docIds,prompt} = req.body;
+    const { docIds, prompt } = req.body;
 
-    let sentDocs = ""
+    let sentDocs = "";
     // for(const id of ids){
     //     const doc = await Resume.findById(id)
     //     sentDocs+=doc.text
     //     sentDocs+="\n\n"
     // }
 
-    const doc = await  Resume.find({
-        _id:{$in:docIds}
-    })
+    const doc = await Resume.find({
+      _id: { $in: docIds },
+    });
 
-    sentDocs = doc.map((doc)=>`${doc.fileName}\n
-    ${doc.text}`).join("\n\n")
-
+    sentDocs = doc
+      .map(
+        (doc) => `${doc.fileName}\n
+    ${doc.text}`,
+      )
+      .join("\n\n");
 
     const response = await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
@@ -105,13 +105,14 @@ app.post("/ai-chat", async (req, res) => {
         },
         body: JSON.stringify({
           model: "openrouter/auto",
-          messages: [{
-            role:"system",
-            content:systemPrompt
-          },
+          messages: [
+            {
+              role: "system",
+              content: systemPrompt,
+            },
             {
               role: "user",
-              content: `Documents:
+              content: `Resume Context:
               ${sentDocs}
               
               question:
@@ -125,14 +126,14 @@ app.post("/ai-chat", async (req, res) => {
     const data = await response.json();
 
     res.json({
-      reply: data.choices[0].message.content
+      reply: data.choices[0].message.content,
     });
   } catch (err) {
     res.json(err.message);
   }
 });
 
-app.post("/upload",upload.array("files"), async (req, res) => {
+app.post("/upload", upload.array("files"), async (req, res) => {
   const files = req.files;
   const prompt = req.body.prompt;
   let allDocIds = [];
@@ -141,7 +142,7 @@ app.post("/upload",upload.array("files"), async (req, res) => {
       reply: "Please send a file",
     });
   }
-  
+
   try {
     for (const file of files) {
       const uint8 = new Uint8Array(file.buffer);
@@ -149,23 +150,23 @@ app.post("/upload",upload.array("files"), async (req, res) => {
 
       const result = await parse.getText();
       const savedResume = await Resume.create({
-        fileName:file.originalname,
-        text:result.text
-      }) 
-      allDocIds.push(savedResume._id)
+        fileName: file.originalname,
+        text: result.text,
+      });
+      allDocIds.push(savedResume._id);
     }
-    console.log("file received")
+    console.log("file received");
     res.json({
-        reply:"received files",
-        ids:allDocIds
-    })
+      reply: "received files",
+      ids: allDocIds,
+    });
   } catch (err) {
     res.json({
       reply: err.message,
     });
   }
 });
-await dbConnect()
+await dbConnect();
 app.listen(PORT, () => {
   console.log(`Backend running in http://localhost:${PORT}`);
 });

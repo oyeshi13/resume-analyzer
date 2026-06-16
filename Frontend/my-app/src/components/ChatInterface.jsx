@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ChatMessage from './ChatMessage';
 
+
 function ChatInterface({ messages, onSendMessage }) {
   const [inputText, setInputText] = useState('');
   const chatEndRef = useRef(null);
