@@ -1,4 +1,4 @@
-<img src = "images/image-6.png" windth=50% height=50%>
+<img src = "images/image-6.png" windth="50%" height="50%">
 # 🚀 ResumeAI Analyzer
 
 An AI-powered resume analysis platform that helps users evaluate resumes, identify skill gaps, improve ATS scores, and receive personalized career guidance.
