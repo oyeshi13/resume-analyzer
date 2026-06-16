@@ -7,6 +7,7 @@ import { dbConnect } from "./config/db.js";
 import mongoose from "mongoose";
 import Resume from "./models/resume.js";
 import systemPrompt from "./systemPrompt.js";
+import resume from "./models/resume.js";
 
 const app = express();
 const PORT = 5000;
@@ -31,34 +32,7 @@ app.post("/chat", (req, res) => {
   });
 });
 
-// app.post("/analyze-resume", upload.array("files"), async (req, res) => {
-//   const response = await fetch(
-//     "https://openrouter.ai/api/v1/chat/completions",
-//     {
-//       method: "POST",
-//       headers: {
-//         Authorization: `Bearer ${process.env.OpenRouter_API_KEY}`,
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({
-//         model: "openrouter/auto",
-//         messages: [
-//           {
-//             role: "user",
-//             content: finalDoc,
-//           },
-//         ],
-//       }),
-//     },
-//   );
 
-//   const data = await response.json();
-
-//   res.json({
-//     reply: data.choices[0].message.content,
-//     docs: finalDoc,
-//   });
-// });
 
 app.post("/ai-chat", async (req, res) => {
   try {
@@ -78,11 +52,6 @@ app.post("/ai-chat", async (req, res) => {
     const { docIds, prompt } = req.body;
 
     let sentDocs = "";
-    // for(const id of ids){
-    //     const doc = await Resume.findById(id)
-    //     sentDocs+=doc.text
-    //     sentDocs+="\n\n"
-    // }
 
     const doc = await Resume.find({
       _id: { $in: docIds },
@@ -166,6 +135,21 @@ app.post("/upload", upload.array("files"), async (req, res) => {
     });
   }
 });
+
+app.delete("/delete",async (req,res)=>{
+  const id = req.body
+
+  await Resume.findByIdAndDelete(id)
+
+  console.log("File deleted")
+  res.json({
+    reply:"You deleted the file"
+  })
+})
+
+
+
+
 await dbConnect();
 app.listen(PORT, () => {
   console.log(`Backend running in http://localhost:${PORT}`);

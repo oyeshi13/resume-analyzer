@@ -1,13 +1,33 @@
-import React, { useState, useRef, useEffect } from 'react';
-import ChatMessage from './ChatMessage';
+import React, { useState, useRef, useEffect } from "react";
+import ChatMessage from "./ChatMessage";
 
+function ChatInterface({ messages, onSendMessage, isAnalyzing}) {
+  const [stepIndex, setStepIndex] = useState(0);
+  
 
-function ChatInterface({ messages, onSendMessage }) {
-  const [inputText, setInputText] = useState('');
+  const loadingSteps = [
+    "📄 Reading documents...",
+    "🔍 Extracting skills...",
+    "📊 Calculating ATS score...",
+    "🎯 Matching job requirements...",
+    "🤖 Generating recommendations...",
+  ];
+
+  useEffect(() => {
+    if (!isAnalyzing) return;
+
+    const interval = setInterval(() => {
+      setStepIndex((prev) => (prev + 1) % loadingSteps.length);
+    }, 1200);
+
+    return () => clearInterval(interval);
+  }, [isAnalyzing]);
+
+  const [inputText, setInputText] = useState("");
   const chatEndRef = useRef(null);
 
   const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -18,7 +38,7 @@ function ChatInterface({ messages, onSendMessage }) {
     e.preventDefault();
     if (!inputText.trim()) return;
     onSendMessage(inputText);
-    setInputText('');
+    setInputText("");
   };
 
   return (
@@ -27,6 +47,16 @@ function ChatInterface({ messages, onSendMessage }) {
         {messages.map((msg) => (
           <ChatMessage key={msg.id} message={msg} />
         ))}
+        {isAnalyzing && (
+          <ChatMessage
+            message={{
+              id: "loading",
+              role: "assistant",
+              content: loadingSteps[stepIndex],
+              timestamp: "",
+            }}
+          />
+        )}
         <div ref={chatEndRef} />
       </div>
 
@@ -38,7 +68,9 @@ function ChatInterface({ messages, onSendMessage }) {
           placeholder="Ask about the resume (e.g., 'What are the core technical gaps?')"
           className="chat-input"
         />
-        <button type="submit" className="send-button">Send</button>
+        <button type="submit" className="send-button">
+          Send
+        </button>
       </form>
     </div>
   );

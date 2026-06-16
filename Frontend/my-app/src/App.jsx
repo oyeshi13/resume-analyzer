@@ -8,6 +8,7 @@ function App() {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [viewingFile, setViewingFile] = useState(null);
   const [documentIds,setDocumentIds]=useState([])
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [messages, setMessages] = useState([
     {
       id: 'welcome',
@@ -38,12 +39,19 @@ function App() {
       const id =await response.json()
       console.log(id)
       setDocumentIds(prev => [...prev,...id.ids])
-
-      //formData.append("docOds",documentIds)
   };
 
-  const handleRemoveFile = (indexToRemove) => {
+  const handleRemoveFile = async (indexToRemove) => {
+    const file = uploadedFiles[indexToRemove]
+    const fileIndex= documentIds[indexToRemove]
+    
+    await fetch("http://localhost:5000/delete",{
+      method:"DELETE",
+      body:fileIndex
+    })
+
     setUploadedFiles((prev) => prev.filter((_, index) => index !== indexToRemove));
+    setDocumentIds((prev) => prev.filter((_, index) => index !== indexToRemove));
   };
 
   const handleSendMessage = async (text) => {
@@ -62,7 +70,7 @@ function App() {
     // }
 
     // formData.append("prompt",text)
-
+    setIsAnalyzing(true)
     let response= await fetch("http://localhost:5000/ai-chat",{
         method:"POST",
         headers: {
@@ -74,7 +82,7 @@ function App() {
         })
       })
     
-    
+    setIsAnalyzing(false)
     const data = await response.json()
     //setDocuments(data.docs)
     //setDocuments((prev)=> [...prev,data.docs])
@@ -116,7 +124,7 @@ function App() {
         </section>
 
         <section className="chat-section">
-          <ChatInterface messages={messages} onSendMessage={handleSendMessage} />
+          <ChatInterface messages={messages} onSendMessage={handleSendMessage} isAnalyzing={isAnalyzing} />
         </section>
       </main>
 
