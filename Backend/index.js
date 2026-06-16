@@ -6,6 +6,7 @@ import { PDFParse } from "pdf-parse";
 import { dbConnect } from "./config/db.js";
 import mongoose from "mongoose";
 import Resume from './models/resume.js'
+import systemPrompt from "./systemPrompt.js";
 
 const app = express();
 const PORT = 5000;
@@ -104,7 +105,10 @@ app.post("/ai-chat", async (req, res) => {
         },
         body: JSON.stringify({
           model: "openrouter/auto",
-          messages: [
+          messages: [{
+            role:"system",
+            content:systemPrompt
+          },
             {
               role: "user",
               content: `Documents:
