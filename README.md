@@ -1,7 +1,8 @@
-<img src = "images/image-6.png" windth="20%" height="20%">
-<img src = "images/image-2.png" windth="20%" height="20%">
-<img src = "images/image-3.png" windth="20%" height="20%">
-
+<p align="center">
+  <img src="images/image-6.png" width="250">
+  <img src="images/image-2.png" width="250">
+  <img src="images/image-3.png" width="250">
+</p>
 # 🚀 ResumeAI Analyzer
 
 An AI-powered resume analysis platform that helps users evaluate resumes, identify skill gaps, improve ATS scores, and receive personalized career guidance.
