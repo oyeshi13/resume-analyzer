@@ -7,6 +7,7 @@ import FilePreview from './components/FilePreview';
 function App() {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [viewingFile, setViewingFile] = useState(null);
+  const [documentIds,setDocumentIds]=useState([])
   const [messages, setMessages] = useState([
     {
       id: 'welcome',
@@ -16,7 +17,7 @@ function App() {
     }
   ]);
 
-  const handleFilesSelected = (files) => {
+  const handleFilesSelected = async (files) => {
     const fileArray = Array.from(files).map(file => ({
       name: file.name,
       size: (file.size / (1024 * 1024)).toFixed(2) + ' MB',
@@ -24,6 +25,21 @@ function App() {
       rawFile: file
     }));
     setUploadedFiles((prev) => [...prev, ...fileArray]);
+
+    const formData = new FormData()
+      fileArray.forEach((file)=>{
+        formData.append("files",file.rawFile)
+      })
+      const response= await fetch("http://localhost:5000/upload",{
+        method: "POST",
+        body: formData
+      })
+
+      const id =await response.json()
+      console.log(id)
+      setDocumentIds(prev => [...prev,...id.ids])
+
+      //formData.append("docOds",documentIds)
   };
 
   const handleRemoveFile = (indexToRemove) => {
@@ -37,32 +53,31 @@ function App() {
       content: text,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
-
     setMessages((prev) => [...prev, userMessage]);
-    let response
-    if(uploadedFiles.length){
-      const formData = new FormData()
-      uploadedFiles.forEach((file)=>{
-        formData.append("files",file.rawFile)
-      })
-      formData.append("prompt",text)
-      response= await fetch("http://localhost:5000/analyze-resume",{
-        method: "POST",
-        body: formData
-      })
-    }
-    else{
-        response = await fetch('http://localhost:5000/chat',{
-        method: "POST",
+    // const formData =  new FormData()
+    // if(documentIds.length){
+    //   documentIds.forEach((id)=>
+    //     formData.append("ids",id)
+    //   )
+    // }
+
+    // formData.append("prompt",text)
+
+    let response= await fetch("http://localhost:5000/ai-chat",{
+        method:"POST",
         headers: {
-          "Content-Type" : "application/json"
-        },
-        body: JSON.stringify({
-          "message" : text
+    "Content-Type":"application/json"
+  },
+        body:JSON.stringify({
+          docIds:documentIds,
+          prompt:text
         })
-      })    
-    }
+      })
+    
+    
     const data = await response.json()
+    //setDocuments(data.docs)
+    //setDocuments((prev)=> [...prev,data.docs])
       const assistantMessage = {
       id : Date.now().toString(),
       role: "assistant",
